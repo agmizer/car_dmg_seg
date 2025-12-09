@@ -8,7 +8,7 @@ Validation: dataset/valid/ - 810 images + _annotations.coco.json
 Test: dataset/test/ - 374 images + _annotations.coco.json
 Format: COCO JSON with segmentation polygons, bounding boxes, and category IDs
 Implementation Plan
-1. Data Loading and Preprocessing Module
+# 1. Data Loading and Preprocessing Module
 File: classical_ml/data_loader.py
 
 Load COCO JSON annotations
@@ -16,6 +16,7 @@ Convert segmentation polygons to binary masks
 Extract bounding boxes for patch-based approaches
 Create data loaders for train/val/test splits
 Handle multi-class segmentation (6 damage types + background)
+-------------------------------------------------------------------
 2. Approach 1: Sliding Window + Traditional Classifier
 File: classical_ml/sliding_window_classifier.py
 

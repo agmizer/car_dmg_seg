@@ -1,7 +1,7 @@
+import os
 from pycocotools.coco import COCO
 import numpy as np
 import cv2
-import os
 from PIL import Image
 
 ann_file = '../dataset/train/_annotations.coco.json'
@@ -15,14 +15,14 @@ def load_data(coco, split):
     image_dir = f'../dataset/{split}'
     image_ids = coco.getImgIds()
     data = []
-    for id in image_ids:
-        img_info = coco.loadImgs(id)[0]
+    for image_id in image_ids:
+        img_info = coco.loadImgs(image_id)[0]
         width = img_info['width']
         height = img_info['height']
         filename = img_info['file_name']
         image_path = os.path.join(image_dir, filename)
         image = np.array(Image.open(image_path))
-        ann_ids = coco.getAnnIds(imgIds=id)
+        ann_ids = coco.getAnnIds(imgIds=image_id)
         anns = coco.loadAnns(ann_ids)
         
         mask = np.zeros((height, width), dtype=np.uint8)
@@ -38,9 +38,21 @@ def load_data(coco, split):
             bboxes.append(bbox)
             categories.append(category_id)
 
-            for polygon in segmentation:
-                points = np.array(polygon).reshape(-1, 2)
-                cv2.fillPoly(mask, [points], category_id)
+            if segmentation is None or len(segmentation) == 0:
+                continue
+            if isinstance(segmentation, list) and len(segmentation) > 0:
+                if isinstance(segmentation[0], list):
+                    polygons = segmentation
+                else:
+                    polygons = [segmentation]
+            else:
+                continue
+            for polygon in polygons:
+                if len(polygon) < 6:
+                    continue
+                points = np.array(polygon, dtype=np.int32).reshape(-1, 2)
+                if points.shape[0] > 0:
+                    cv2.fillPoly(mask, [points], int(category_id))
 
         data.append({
             'image': image,
