@@ -1,18 +1,43 @@
 [project]
-name = "car-dmg-seg"
+name = "car_dmg_seg"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
-    "colorgram-py>=1.2.0",
-    "extcolors>=1.0.0",
-    "notebook>=7.5.0",
-    "opencv-python>=4.12.0.88",
-    "pillow>=12.0.0",
-    "pycocotools>=2.0.10",
-    "scikit-image>=0.25.2",
+    "albumentations>=2.0.8",
+    "matplotlib>=3.10.7",
+    "notebook>=7.4.7",
+    "numpy>=2.3.4",
+    "pandas>=2.3.3",
     "scikit-learn>=1.7.2",
-    "seaborn>=0.13.2",
+    "tensorflow>=2.20.0",
+    "torch>=2.9.1",
+    "torchvision>=0.24.1",
     "tqdm>=4.67.1",
+    "ultralytics>=8.3.228",
+    # Inference server dependencies
+    "livekit>=0.18.0",
+    "livekit-api>=0.7.0",
+    "opencv-python>=4.10.0",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.6.0",
+    "supervision>=0.25.0",
+]
+
+[project.scripts]
+inference-server = "inference.main:run"
+camera-client = "inference.camera_client:main"
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cu128", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+torchvision = [
+  { index = "pytorch-cu128", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
 ]
