@@ -22,10 +22,12 @@ dependencies = [
     "opencv-python>=4.10.0",
     "pydantic>=2.10.0",
     "pydantic-settings>=2.6.0",
+    "supervision>=0.25.0",
 ]
 
 [project.scripts]
-inference-server = "inference_server.main:run"
+inference-server = "inference.main:run"
+camera-client = "inference.camera_client:main"
 
 [[tool.uv.index]]
 name = "pytorch-cu128"
